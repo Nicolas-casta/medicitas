@@ -9,15 +9,24 @@ import java.util.Date;
 
 @Service
 public class JwtService {
-
     private static final String SECRET = "tu_clave_secreta_super_larga_de_64_caracteres_minimo_123456";
 
     public String generateToken(Usuario usuario) {
         return Jwts.builder()
                 .subject(usuario.getEmail())
+                .claim("userId", usuario.getId())
                 .claim("rol", usuario.getRol())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 86400000))
+                .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()))
+                .compact();
+    }
+
+    public String generateRefreshToken(Usuario usuario) {
+        return Jwts.builder()
+                .subject(usuario.getEmail())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 604800000))
                 .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()))
                 .compact();
     }

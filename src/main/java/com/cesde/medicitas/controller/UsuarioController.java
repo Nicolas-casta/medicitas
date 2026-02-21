@@ -1,5 +1,7 @@
 package com.cesde.medicitas.controller;
 
+import com.cesde.medicitas.dto.LoginDTO;
+import com.cesde.medicitas.dto.TokenResponseDTO;
 import com.cesde.medicitas.dto.UsuarioDTO;
 import com.cesde.medicitas.service.UsuarioService;
 import jakarta.validation.Valid;
@@ -23,5 +25,18 @@ public class UsuarioController {
 
         String token = service.registrarUsuario(datos);
         return ResponseEntity.status(HttpStatus.CREATED).body(token);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<TokenResponseDTO> login(@RequestBody @Valid LoginDTO datos) {
+        try {
+            TokenResponseDTO tokens = service.login(datos);
+            return ResponseEntity.ok(tokens);
+        } catch (RuntimeException e) {
+            if ("401".equals(e.getMessage())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+            throw e;
+        }
     }
 }
