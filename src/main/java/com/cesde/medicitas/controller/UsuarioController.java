@@ -1,6 +1,7 @@
 package com.cesde.medicitas.controller;
 
 import com.cesde.medicitas.dto.LoginDTO;
+import com.cesde.medicitas.dto.RefreshTokenDTO;
 import com.cesde.medicitas.dto.TokenResponseDTO;
 import com.cesde.medicitas.dto.UsuarioDTO;
 import com.cesde.medicitas.service.UsuarioService;
@@ -37,6 +38,16 @@ public class UsuarioController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
             throw e;
+        }
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<String> refresh(@RequestBody RefreshTokenDTO dto) {
+        try {
+            String nuevoAccessToken = service.refrescarSesion(dto.refresh_token());
+            return ResponseEntity.ok(nuevoAccessToken);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 }

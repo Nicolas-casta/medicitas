@@ -47,4 +47,16 @@ public class UsuarioService {
 
         return new TokenResponseDTO(access, refresh);
     }
+
+    public String refrescarSesion(String refreshToken) {
+        if (!jwtService.esTokenValido(refreshToken)) {
+            throw new RuntimeException("401");
+        }
+
+        String email = jwtService.extraerEmail(refreshToken);
+        Usuario usuario = repository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("401"));
+
+        return jwtService.generateToken(usuario);
+    }
 }

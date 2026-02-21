@@ -30,4 +30,25 @@ public class JwtService {
                 .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()))
                 .compact();
     }
+
+    public boolean esTokenValido(String token) {
+        try {
+            Jwts.parser()
+                    .verifyWith(Keys.hmacShaKeyFor(SECRET.getBytes()))
+                    .build()
+                    .parseSignedClaims(token);
+            return true;
+        } catch (Exception e) {
+            return false; // Expirado o alterado
+        }
+    }
+
+    public String extraerEmail(String token) {
+        return Jwts.parser()
+                .verifyWith(Keys.hmacShaKeyFor(SECRET.getBytes()))
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
+    }
 }
