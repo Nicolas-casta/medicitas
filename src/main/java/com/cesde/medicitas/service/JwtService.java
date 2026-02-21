@@ -1,0 +1,24 @@
+package com.cesde.medicitas.service;
+
+import com.cesde.medicitas.model.Usuario;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+
+@Service
+public class JwtService {
+
+    private static final String SECRET = "tu_clave_secreta_super_larga_de_64_caracteres_minimo_123456";
+
+    public String generateToken(Usuario usuario) {
+        return Jwts.builder()
+                .subject(usuario.getEmail())
+                .claim("rol", usuario.getRol())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 86400000))
+                .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()))
+                .compact();
+    }
+}
