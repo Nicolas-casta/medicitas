@@ -1,9 +1,7 @@
 version: '3.8'
-
 services:
-    postgres:
-        image: postgres:15-alpine
-        container_name: medicitas-db
+    db:
+        image: postgres:15
         environment:
             POSTGRES_DB: medicitas
             POSTGRES_USER: postgres
@@ -11,26 +9,18 @@ services:
         ports:
             - "5432:5432"
         volumes:
-            - postgres_data:/var/lib/postgresql/data
-        healthcheck:
-            test: ["CMD-SHELL", "pg_isready -U postgres"]
-            interval: 10s
-            timeout: 5s
-            retries: 5
+            - pgdata:/var/lib/postgresql/data
 
     app:
         build: .
-        container_name: medicitas-app
         ports:
             - "8080:8080"
-        environment:
-            DB_USERNAME: postgres
-            DB_PASSWORD: ndiosa08
-            JWT_SECRET: 40a0a0020edee009d701d41394ccf3c143df0a0d29e7d8cbe2f770673fb31460
-            SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/medicitas
         depends_on:
-            postgres:
-                condition: service_healthy
+            - db
+        environment:
+            SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/medicitas
+            SPRING_DATASOURCE_USERNAME: postgres
+            SPRING_DATASOURCE_PASSWORD: ndiosa08
 
 volumes:
-    postgres_data:
+    pgdata:

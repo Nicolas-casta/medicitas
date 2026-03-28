@@ -1,27 +1,25 @@
 package com.cesde.medicitas.config;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
-import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import org.springframework.context.annotation.Configuration;
+import io.swagger.v3.oas.models.*;
+import io.swagger.v3.oas.models.info.*;
+import io.swagger.v3.oas.models.security.*;
+import org.springframework.context.annotation.*;
 
 @Configuration
-@OpenAPIDefinition(
-        info = @Info(
-                title = "MediCitas API",
-                version = "v1",
-                description = "API REST para el sistema de agendamiento de citas médicas"
-        )
-)
-@SecurityScheme(
-        name = "bearerAuth",
-        description = "JWT Bearer Token",
-        scheme = "bearer",
-        type = SecuritySchemeType.HTTP,
-        bearerFormat = "JWT",
-        in = SecuritySchemeIn.HEADER
-)
 public class OpenApiConfig {
+
+    @Bean
+    public OpenAPI openAPI() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("MediCitas API")
+                        .version("1.0")
+                        .description("Sistema de agendamiento de citas médicas"))
+                .addSecurityItem(new SecurityRequirement().addList("Bearer Auth"))
+                .components(new Components()
+                        .addSecuritySchemes("Bearer Auth", new SecurityScheme()
+                                .type(SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT")));
+    }
 }

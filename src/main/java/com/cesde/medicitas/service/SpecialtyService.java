@@ -1,8 +1,6 @@
 package com.cesde.medicitas.service;
 
-import com.cesde.medicitas.dto.SpecialtyRequest;
-import com.cesde.medicitas.dto.SpecialtyResponse;
-
+import com.cesde.medicitas.dto.*;
 import java.util.List;
 
 public interface SpecialtyService {
