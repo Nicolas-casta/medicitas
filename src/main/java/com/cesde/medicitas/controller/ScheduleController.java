@@ -26,7 +26,7 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     @Operation(summary = "US-007: Configurar horario del doctor")
     public ResponseEntity<ScheduleResponse> create(@PathVariable Long doctorId,
                                                    @Valid @RequestBody ScheduleRequest req) {
@@ -35,14 +35,14 @@ public class ScheduleController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     @Operation(summary = "US-007: Ver horarios del doctor")
     public ResponseEntity<List<ScheduleResponse>> getSchedules(@PathVariable Long doctorId) {
         return ResponseEntity.ok(scheduleService.getSchedulesByDoctor(doctorId));
     }
 
     @GetMapping("/slots")
-    @PreAuthorize("hasAnyRole('ADMIN', 'RECEPCIONISTA')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'RECEPCIONISTA')")
     @Operation(summary = "US-008: Ver slots disponibles")
     public ResponseEntity<List<SlotResponse>> getSlots(@PathVariable Long doctorId,
                                                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {

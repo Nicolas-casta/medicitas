@@ -24,14 +24,14 @@ public class DoctorController {
     private final DoctorService doctorService;
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "US-005: Crear doctor")
     public ResponseEntity<DoctorResponse> create(@Valid @RequestBody DoctorRequest req) {
         return ResponseEntity.status(HttpStatus.CREATED).body(doctorService.create(req));
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'RECEPCIONISTA', 'PACIENTE')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'RECEPCIONISTA', 'PACIENTE')")
     @Operation(summary = "US-005/006: Listar doctores (filtrar por especialidad)")
     public ResponseEntity<List<DoctorResponse>> findAll(
             @RequestParam(required = false) Long specialtyId) {
@@ -40,7 +40,7 @@ public class DoctorController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "US-005: Actualizar doctor")
     public ResponseEntity<DoctorResponse> update(@PathVariable Long id,
                                                  @RequestBody DoctorUpdateRequest req) {
@@ -48,7 +48,7 @@ public class DoctorController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "US-005: Desactivar doctor")
     public ResponseEntity<Void> deactivate(@PathVariable Long id) {
         doctorService.deactivate(id);

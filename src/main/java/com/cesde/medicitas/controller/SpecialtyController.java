@@ -23,7 +23,7 @@ public class SpecialtyController {
     private final SpecialtyService specialtyService;
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "US-004: Crear especialidad")
     public ResponseEntity<SpecialtyResponse> create(@Valid @RequestBody SpecialtyRequest req) {
         return ResponseEntity.status(HttpStatus.CREATED).body(specialtyService.create(req));
@@ -36,7 +36,7 @@ public class SpecialtyController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "US-004: Actualizar especialidad")
     public ResponseEntity<SpecialtyResponse> update(@PathVariable Long id,
                                                     @Valid @RequestBody SpecialtyRequest req) {
@@ -44,7 +44,7 @@ public class SpecialtyController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "US-004: Desactivar especialidad")
     public ResponseEntity<Void> deactivate(@PathVariable Long id) {
         specialtyService.deactivate(id);
