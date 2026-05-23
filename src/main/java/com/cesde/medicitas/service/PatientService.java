@@ -3,6 +3,7 @@ package com.cesde.medicitas.service;
 import com.cesde.medicitas.dto.PatientPerfilUpdateRequest;
 import com.cesde.medicitas.dto.PatientRequest;
 import com.cesde.medicitas.dto.PatientResponse;
+import com.cesde.medicitas.dto.PerfilUpdateResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,5 +18,5 @@ public interface PatientService {
 
     // US-010
     PatientResponse getMyProfile(Long userId);
-    PatientResponse updateMyProfile(Long userId, PatientPerfilUpdateRequest request);
+    PerfilUpdateResponse updateMyProfile(Long userId, PatientPerfilUpdateRequest request);
 }

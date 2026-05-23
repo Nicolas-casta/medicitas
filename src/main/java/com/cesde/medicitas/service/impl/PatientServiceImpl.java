@@ -3,6 +3,7 @@ package com.cesde.medicitas.service.impl;
 import com.cesde.medicitas.dto.PatientPerfilUpdateRequest;
 import com.cesde.medicitas.dto.PatientRequest;
 import com.cesde.medicitas.dto.PatientResponse;
+import com.cesde.medicitas.dto.PerfilUpdateResponse;
 import com.cesde.medicitas.entity.Patient;
 import com.cesde.medicitas.entity.User;
 import com.cesde.medicitas.enums.Role;
@@ -11,6 +12,7 @@ import com.cesde.medicitas.exception.EmailAlreadyExistsException;
 import com.cesde.medicitas.exception.ResourceNotFoundException;
 import com.cesde.medicitas.repository.PatientRepository;
 import com.cesde.medicitas.repository.UserRepository;
+import com.cesde.medicitas.security.JwtService;
 import com.cesde.medicitas.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,7 @@ public class PatientServiceImpl implements PatientService {
     private final PatientRepository patientRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     // ─── US-009 ───────────────────────────────────────────────────────────────
 
@@ -128,7 +131,7 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     @Transactional
-    public PatientResponse updateMyProfile(Long userId, PatientPerfilUpdateRequest req) {
+    public PerfilUpdateResponse updateMyProfile(Long userId, PatientPerfilUpdateRequest req) {
         Patient patient = patientRepository.findByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Perfil no encontrado para usuario: " + userId));
 
@@ -141,7 +144,13 @@ public class PatientServiceImpl implements PatientService {
         userRepository.save(user);
 
         patient.setDireccion(req.direccion());
-        return toResponse(patientRepository.save(patient));
+        PatientResponse patientResponse = toResponse(patientRepository.save(patient));
+
+        // Genera tokens nuevos con el email actualizado
+        String newAccessToken = jwtService.generateAccessToken(userId, user.getEmail(), user.getRole().name());
+        String newRefreshToken = jwtService.generateRefreshToken(user.getEmail());
+
+        return new PerfilUpdateResponse(patientResponse, newAccessToken, newRefreshToken);
     }
 
     // ─── Mapper ───────────────────────────────────────────────────────────────

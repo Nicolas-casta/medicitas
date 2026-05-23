@@ -3,6 +3,7 @@ package com.cesde.medicitas.controller;
 import com.cesde.medicitas.dto.PatientPerfilUpdateRequest;
 import com.cesde.medicitas.dto.PatientRequest;
 import com.cesde.medicitas.dto.PatientResponse;
+import com.cesde.medicitas.dto.PerfilUpdateResponse;
 import com.cesde.medicitas.security.JwtService;
 import com.cesde.medicitas.service.PatientService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -80,7 +81,7 @@ public class PatientController {
     @PatchMapping("/me")
     @PreAuthorize("hasAuthority('PACIENTE')")
     @Operation(summary = "US-010: Actualizar mi perfil (email, teléfono, dirección)")
-    public ResponseEntity<PatientResponse> updateMyProfile(
+    public ResponseEntity<PerfilUpdateResponse> updateMyProfile(
             @RequestHeader("Authorization") String authHeader,
             @Valid @RequestBody PatientPerfilUpdateRequest req) {
         return ResponseEntity.ok(patientService.updateMyProfile(extractUserId(authHeader), req));
