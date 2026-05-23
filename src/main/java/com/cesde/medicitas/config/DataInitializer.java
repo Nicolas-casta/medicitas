@@ -21,7 +21,8 @@ public class DataInitializer {
                                       PasswordEncoder passwordEncoder) {
         return args -> {
             // ADMINISTRADOR
-            if (!userRepository.existsByEmail("admin@medicitas.com")) {
+            if (!userRepository.existsByEmail("admin@medicitas.com")
+                    && !userRepository.existsByDocumento("000000000")) {
                 User admin = User.builder()
                         .nombre("Admin")
                         .apellido("Sistema")
@@ -38,7 +39,8 @@ public class DataInitializer {
             }
 
             // RECEPCIONISTA
-            if (!userRepository.existsByEmail("recep@medicitas.com")) {
+            if (!userRepository.existsByEmail("recep@medicitas.com")
+                    && !userRepository.existsByDocumento("000000002")) {
                 userRepository.save(User.builder()
                         .nombre("Laura").apellido("Gómez")
                         .documento("000000002").email("recep@medicitas.com")
@@ -49,7 +51,8 @@ public class DataInitializer {
             }
 
             // PACIENTE
-            if (!userRepository.existsByEmail("paciente@medicitas.com")) {
+            if (!userRepository.existsByEmail("paciente@medicitas.com")
+                    && !userRepository.existsByDocumento("000000003")) {
                 User pacienteUser = User.builder()
                         .nombre("Juan")
                         .apellido("Pérez")
@@ -64,7 +67,6 @@ public class DataInitializer {
                 userRepository.save(pacienteUser);
                 System.out.println("PACIENTE creado: paciente@medicitas.com / paciente1234");
 
-                // Luego crea el registro en patients
                 Patient patient = Patient.builder()
                         .user(pacienteUser)
                         .direccion("Calle 123")
